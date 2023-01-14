@@ -600,6 +600,7 @@ dependencies = [
  "hyper-tls",
  "lazy_static",
  "log",
+ "object_store",
  "pretty_assertions",
  "regex",
  "reqwest",
@@ -616,6 +617,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "uriparse",
+ "url",
  "yup-oauth2",
 ]
 

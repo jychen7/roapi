@@ -12,6 +12,8 @@ path = "src/lib.rs"
 
 [dependencies]
 datafusion = "12"
+object_store = "0.5.0"
+url = "2.2"
 
 log = "0"
 regex = "1"
