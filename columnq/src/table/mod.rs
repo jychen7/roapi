@@ -1,3 +1,4 @@
+use url::Url;
 use std::convert::TryFrom;
 use std::ffi::OsStr;
 use std::io::Read;
@@ -405,9 +406,14 @@ impl TableSource {
 
     pub fn parsed_uri(&self) -> Result<URIReference, ColumnQError> {
         match &self.io_source {
-            TableIoSource::Uri(uri) => URIReference::try_from(uri.as_str()).map_err(|_| {
-                ColumnQError::InvalidUri(format!("{uri}. Make sure it's URI encoded."))
-            }),
+            TableIoSource::Uri(uri) => {
+                let uri_string = match Url::parse(uri) {
+                    Ok(encoded_uri) => String::from(encoded_uri),
+                    // fallback
+                    Err(_) => String::from(uri),
+                };
+                URIReference::try_from(uri_string.as_str()).map_err(|e| { ColumnQError::InvalidUri(format!("{uri_string}: {e:?}")) })
+            },
             TableIoSource::Memory(_) => URIReference::builder()
                 .with_scheme(Some(uriparse::Scheme::try_from("memory").map_err(|e| {
                     ColumnQError::Generic(format!(
